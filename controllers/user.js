@@ -108,7 +108,7 @@ export const RemoveFromFavorites = async (req, res, next) => {
         const user = await User.findById(req.user.id);
 
         // Remove property from favorites
-        user.favourites = user .favourites.filter(fav => !fav.equals(propertyId));
+        user.favourites = user.favourites.filter(fav => !fav.equals(propertyId));
         await user.save();
 
         return res.status(200).json({ message: "Property removed from favourites", favourites: user.favourites });
@@ -121,14 +121,12 @@ export const RemoveFromFavorites = async (req, res, next) => {
 export const GetUserFavorites = async (req, res, next) => {
     try {
         // Populate the 'favourites' field with the full property details
-        const user = await User.findById(req.user.id).populate({
-            path: 'favourites',
-            select: 'title desc img rating location price' // Specify the fields to include
-        });
-
+        const user = await User.findById(req.user.id).populate("favourites", "title desc img rating price");
         if (!user) return next(createError(404, "User  not found"));
 
+        // Return the populated favourites
         return res.status(200).json(user.favourites);
+
     } catch (err) {
         next(createError(500, err.message));
     }
