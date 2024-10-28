@@ -8,11 +8,16 @@ import errorHandler from "./middlewares/errorHandler.js"; // Correct import
 
 dotenv.config();
 
-const app = express(); // Make sure to initialize the express app
+const app = express(); // Initialize the express app
 
 app.use(cors());
 app.use(express.json({ limit: "50mb" })); // Middleware to parse JSON requests
 app.use(express.urlencoded({ extended: true }));
+
+// Root endpoint to display server status
+app.get("/", (req, res) => {
+    res.send("The server is working well!");
+});
 
 app.use("/api/user/", UserRoutes);
 app.use("/api/property/", PropertyRoutes);
