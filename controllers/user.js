@@ -107,7 +107,7 @@ export const RemoveFromFavorites = async (req, res, next) => {
     const user = await User.findById(req.user.id);
 
     // Remove property from favorites
-    user.favourites = user.favourites.filter(f av => !fav.equals(propertyId));
+    user.favourites = user.favourites.filter(fav => !fav.equals(propertyId));
     await user.save();
 
  return res.status(200).json({ message: "Property removed from favourites", favourites: user.favourites });
