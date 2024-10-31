@@ -107,7 +107,7 @@ export const RemoveFromFavorites = async (req, res, next) => {
     const user = await User.findById(req.user.id);
 
     // Remove property from favorites
-    user.favourites = user.favourites.filter(fav => !fav.equals(propertyId));
+    user.favourites = user.favourites.filter(f av => !fav.equals(propertyId));
     await user.save();
 
  return res.status(200).json({ message: "Property removed from favourites", favourites: user.favourites });
@@ -125,6 +125,18 @@ export const GetUserFavorites = async (req, res, next) => {
 
     // Return the populated favourites
     return res.status(200).json(user.favourites);
+  } catch (err) {
+    next(createError(500, "Internal server error"));
+  }
+};
+
+// Get Booked Property
+export const GetBookingProperty = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).populate("bookings");
+    if (!user) return next(createError(404, "User not found"));
+
+    return res.status(200).json(user.bookings);
   } catch (err) {
     next(createError(500, "Internal server error"));
   }
