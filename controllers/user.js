@@ -126,3 +126,15 @@ export const GetUserFavorites = async (req, res, next) => {
     next(createError(500, err.message));
   }
 };
+
+// Get Booked Properties
+export const GetBookedProperties = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user.id).populate("bookings");
+    if (!user) return next(createError(404, "User not found"));
+
+    return res.status(200).json(user.bookings);
+  } catch (err) {
+    next(createError(500, err.message));
+  }
+};
