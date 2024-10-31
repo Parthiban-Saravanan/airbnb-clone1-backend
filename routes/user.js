@@ -7,6 +7,7 @@ import {
     SignIn,
     BookingProperty,
     GetBookingProperty,
+    GetBookedProperties,
 } from "../controllers/user.js";
 import { verifyToken } from "../middlewares/verifyToken.js";
 
@@ -18,5 +19,6 @@ router.post("/addToFavorites", verifyToken, AddToFavorites);
 router.get("/getFavorites", verifyToken, GetUserFavorites);
 router.post("/removeFavorite", verifyToken, RemoveFromFavorites);
 router.post("/booking", verifyToken, BookingProperty);
+router.get("/getBookedProperties", verifyToken, GetBookedProperties);
 
 export default router;
