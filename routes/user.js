@@ -20,5 +20,6 @@ router.get("/getFavorites", verifyToken, GetUserFavorites);
 router.post("/removeFavorite", verifyToken, RemoveFromFavorites);
 router.post("/booking", verifyToken, BookingProperty);
 router.get("/getBookedProperties", verifyToken, GetBookedProperties);
+router.get("/getBookingProperty", verifyToken, GetBookingProperty);
 
 export default router;
