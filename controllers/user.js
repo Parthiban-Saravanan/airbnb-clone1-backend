@@ -13,17 +13,17 @@ export const SignUp = async (req, res, next) => {
     const { email, password, name } = req.body;
 
     // Check if user already exists
-    const existingUser  = await User.findOne({ email });
-    if (existingUser ) return next(createError(409, "Email already exists"));
+    const existingUser = await User.findOne({ email });
+    if (existingUser) return next(createError(409, "Email already exists"));
 
     // Hash the password
     const hashedPassword = await bcrypt.hash(password, await bcrypt.genSalt(10));
     const user = new User({ name, email, password: hashedPassword });
-    const createdUser  = await user.save();
+    const createdUser = await user.save();
 
     // Generate JWT token
-    const token = jwt.sign({ id: createdUser ._id }, process.env.JWT, { expiresIn: "9999 years" });
-    return res.status(201).json({ token, user: createdUser  });
+    const token = jwt.sign({ id: createdUser._id }, process.env.JWT, { expiresIn: "9999 years" });
+    return res.status(201).json({ token, user: createdUser });
   } catch (err) {
     next(createError(500, "Internal server error"));
   }
@@ -60,7 +60,7 @@ export const BookingProperty = async (req, res, next) => {
     if (user.bookings.includes(propertyId)) {
       return next(createError(409, "Property is already booked"));
     }
-    
+
     user.bookings.push(propertyId);
     await user.save();
 
@@ -110,7 +110,7 @@ export const RemoveFromFavorites = async (req, res, next) => {
     user.favourites = user.favourites.filter(fav => !fav.equals(propertyId));
     await user.save();
 
- return res.status(200).json({ message: "Property removed from favourites", favourites: user.favourites });
+    return res.status(200).json({ message: "Property removed from favourites", favourites: user.favourites });
   } catch (err) {
     next(createError(500, "Internal server error"));
   }
@@ -119,14 +119,12 @@ export const RemoveFromFavorites = async (req, res, next) => {
 // Get User Favorites
 export const GetUserFavorites = async (req, res, next) => {
   try {
-    // Populate the 'favourites' field with the full property details
     const user = await User.findById(req.user.id).populate("favourites", "title desc img rating price");
-    if (!user) return next(createError(404, "User  not found"));
-
-    // Return the populated favourites
+    if (!user) return next(createError(404, "User not found"));
     return res.status(200).json(user.favourites);
   } catch (err) {
-    next(createError(500, "Internal server error"));
+    console.error("GetUserFavorites error:", err);  // Log specific error details
+    next(createError(500, "Failed to retrieve favorites"));
   }
 };
 
